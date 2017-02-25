@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import icon %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-9">
+            <h3 class="lead">Disease</h3>
+        <a><input type='text' tabindex='3' class='span3' id='search' placeholder='Search'></a>
+            <table id="disease-table" class="table">
+               <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th></th>
+                    <th>Symptoms</th>
+                </tr>
+                {%- for d in all %}
+                    <tr>
+                        <td> {{ d.id }} </td>
+                        <td> {{ d.name }}</td>
+                        <td><a class="btn btn-xs btn-default"  href="{{ url_for('update_disease', disease_id=d.id) }}" >{{ icon('edit') }} Edit</a>
+                        </td>
+                        <td>{%- for l in d.symptoms %}
+                            {{ l.symptom.name }}:{{ l.weight }};
+                        {%- endfor %}</td>
+                    </tr>
+                {%- endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
