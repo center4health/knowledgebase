@@ -4,6 +4,7 @@ from application import app
 
 db = SQLAlchemy(app)
 
+
 class explanation_observation(db.Model):
     __tablename__ = "explanation_observation"
     id = db.Column('id', db.Integer, primary_key=True)
@@ -13,6 +14,7 @@ class explanation_observation(db.Model):
     observation = db.relationship('observation', back_populates="explanations")
     explanation = db.relationship('explanation', back_populates="observations")
 
+
 class explanation_location(db.Model):
     __tablename__ = "explanation_location"
     id = db.Column('id', db.Integer, primary_key=True)
@@ -21,10 +23,12 @@ class explanation_location(db.Model):
     location = db.relationship('location', back_populates="explanations")
     explanation = db.relationship('explanation', back_populates="locations")
 
+
 class explanation_type(db.Model):
     __tablename__ = "explanation_type"
     id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.Text)
+
 
 class explanation(db.Model):
     __tablename__ = "explanation"
@@ -35,6 +39,7 @@ class explanation(db.Model):
     types = db.relationship("explanation_type")
     observations = db.relationship("explanation_observation", back_populates="explanation")
     locations = db.relationship("explanation_location", back_populates="explanation")
+
 
 class observation(db.Model):
     __tablename__ = "observation"
@@ -77,4 +82,3 @@ class User(db.Model):
 
     def is_anonymous(self):
         return False
-

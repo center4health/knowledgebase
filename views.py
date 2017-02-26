@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, flash, url_for, session
-from models import explanation, observation, location, explanation_observation, explanation_location, User, db
+from models import explanation, observation, location, explanation_observation, explanation_type, explanation_location, User, db
 from application import app, bcrypt, login_manager
 from flask_login import login_user , logout_user , current_user , login_required
 login_manager.login_view = 'login'
@@ -31,10 +31,10 @@ def login():
                 return redirect(request.args.get('next') or url_for('all'))
             else:
                 flash('Password is invalid', 'error')
-                return redirect(url_for('all'))
+                return redirect(url_for('login'))
         else:
             flash('Username or Password is invalid', 'error')
-            return redirect(url_for('all'))
+            return redirect(url_for('login'))
     if len(request.form) == 6:
         username = request.form['username']
         if request.form['password'] == request.form['rpassword']:
@@ -81,41 +81,86 @@ def all():
 #             'new-disease.html',
 #             page='new-disease.html')
 #
-# @app.route('/<int:disease_id>', methods=['GET', 'POST'])
-# def update_disease(disease_id):
-#     d = disease.query.get(disease_id)
-#     if request.method == 'GET':
-#         return render_template(
-#             'update.html',
-#             d=d,
-#         )
-#     else:
-#         name = request.form['disease']
-#         d.name = name
-#         db.session.commit()
-#         exsymptoms = request.form.getlist('sym')
-#         exweight = request.form.getlist('weight')
-#         for i in xrange(len(exsymptoms)):
-#             if (exsymptoms[i] != d.symptoms[i].symptom.name):
-#                 dds = disease_symptom.query.filter_by(disease_id = d.id, symptom_id =d.symptoms[i].symptom.id).first()
-#                 db.session.delete(dds)
-#                 db.session.commit()
-#                 s = symptom.query.filter_by(name=exsymptoms[i]).first()
-#                 if (s == None):
-#                     s = symptom(name=request.form['symptom'])
-#                     db.session.add(s)
-#                     db.session.commit()
-#                 s = symptom.query.filter_by(name=exsymptoms[i]).first()
-#                 ds = disease_symptom(disease_id=d.id, symptom_id=s.id, weight=exweight[i])
-#                 db.session.add(ds)
-#             else:
-#                 s = symptom.query.filter_by(name=exsymptoms[i]).first()
-#                 ds = disease_symptom.query.filter_by(disease_id = d.id, symptom_id =s.id).first()
-#                 ds.weight = exweight[i]
-#         db.session.commit()
-#         return redirect('/')
-#
-#
+
+
+@app.route('/u<int:explanation_id>', methods=['GET', 'POST'])
+@login_required
+def update_explanation(explanation_id):
+    e = explanation.query.get(explanation_id)
+    et = explanation_type.query.all()
+    el = location.query.all()
+    if request.method == 'GET':
+        return render_template(
+            'update.html',
+            e=e,
+            et=et,
+            el=el
+        )
+    else:
+        name = request.form['explanation']
+        tid = request.form['type']
+        lid = request.form.getlist('location')
+        e.typeid = tid
+        e.name = name
+        db.session.commit()
+        for l in e.locations:
+            el = explanation_location.query.filter_by(explanation_id=e.id, location_id=l.location.id).first()
+            if el is None:
+                break
+            else:
+                db.session.delete(el)
+        db.session.commit()
+        for l in lid:
+            el = explanation_location(explanation_id=e.id, location_id=l)
+            db.session.add(el)
+            db.session.commit()
+        exobservations = request.form.getlist('obs')
+        exweight = request.form.getlist('weight')
+        for i in range(len(exobservations)):
+            if exobservations[i] != e.observations[i].observation.name:
+                dds = explanation_observation.query.filter_by(explanation_id=e.id, observation_id =e.observations[i].observation.id).first()
+                db.session.delete(dds)
+                db.session.commit()
+                s = observation.query.filter_by(name=exobservations[i]).first()
+                if (s == None):
+                    s = observation(name=request.form['observation'])
+                    db.session.add(s)
+                    db.session.commit()
+                s = observation.query.filter_by(name=exobservations[i]).first()
+                ds = explanation_observation(explanation_id=e.id, observation_id=s.id, weight=exweight[i])
+                db.session.add(ds)
+            else:
+                s = observation.query.filter_by(name=exobservations[i]).first()
+                ds = explanation_observation.query.filter_by(explanation_id=e.id, observation_id=s.id).first()
+                ds.weight = exweight[i]
+        db.session.commit()
+        return redirect('/all')
+
+@app.route('/d<int:explanation_id>', methods=['GET'])
+@login_required
+def delete_explanation(explanation_id):
+    if request.method == 'GET':
+        e = explanation.query.get(explanation_id)
+        for o in e.observations:
+            eo = explanation_observation.query.filter_by(explanation_id=e.id, observation_id=o.observation.id).first()
+            if eo is None:
+                break
+            else:
+                db.session.delete(eo)
+        db.session.commit()
+        for l in e.locations:
+            el = explanation_location.query.filter_by(explanation_id=e.id, location_id=l.location.id).first()
+            if el is None:
+                break
+            else:
+                db.session.delete(el)
+        db.session.commit()
+        db.session.delete(e)
+        db.session.commit()
+        return redirect('/all')
+
+
+
 # @app.route('/add-symptom', methods=['GET', 'POST'])
 # def new():
 #     if request.method == 'POST':

@@ -24,7 +24,6 @@
         <link href="/static/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <link href="/static//global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="/static/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -77,16 +76,16 @@
                                 </li>
                                 <li class="dropdown dropdown-fw dropdown-fw-disabled  active open selected">
                                     <a href="javascript:;" class="text-uppercase">
-                                        <i class="icon-briefcase"></i> Diseases </a>
+                                        <i class="icon-briefcase"></i> Explanation </a>
                                     <ul class="dropdown-menu dropdown-menu-fw">
                                         <li>
-                                            <a href="table_static_basic.html"> All Diseases </a>
+                                            <a href="table_static_basic.html"> All Explanation </a>
                                         </li>
                                         <li>
-                                            <a href="table_static_responsive.html"> New Diseases </a>
+                                            <a href="table_static_responsive.html"> New Explanation </a>
                                         </li>
                                         <li>
-                                            <a href="table_bootstrap.html"> Manage Diseases </a>
+                                            <a href="table_bootstrap.html"> Manage Explanation </a>
                                         </li>
                                     </ul>
                                 </li>
@@ -102,12 +101,12 @@
                 <div class="page-content">
                     <!-- BEGIN BREADCRUMBS -->
                     <div class="breadcrumbs">
-                        <h1>All Diseases</h1>
+                        <h1>All Explanation</h1>
                         <ol class="breadcrumb">
                             <li>
                                 <a href="#">Home</a>
                             </li>
-                            <li class="active">Diseases</li>
+                            <li class="active">Explanation</li>
                         </ol>
                         <!-- Sidebar Toggle Button -->
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".page-sidebar">
@@ -126,61 +125,131 @@
                         <div class="page-content-row">
                             <div class="page-content-col">
                                 <!-- BEGIN PAGE BASE CONTENT -->
-                                <div class="row">
+                                <div class="form-row-seperated">
                                     <div class="portlet light bordered">
                                         <div class="portlet-title">
                                                 <div class="caption">
                                                     <i class="icon-speech font-green"></i>
-                                                    <span class="caption-subject bold font-green uppercase">Update Disease</span>
+                                                    <span class="caption-subject bold font-green uppercase">Update Explanation</span>
                                                 </div>
                                                 <div class="actions">
                                                     <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;"> </a>
                                                 </div>
                                             </div>
-                                        <div class="portlet-body">
-                                                <form role="form" action="{{ url_for('update_disease', disease_id=d.id) }}" method="post">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Disease name</label>
-                                                        <input type="text" placeholder="Please give disease name" {% if d is defined %} value="{{ d.name }}"{% endif %} id="disease" name="disease" class="form-control" /> </div>
-                                                    <div class="form-group mt-repeater">
-                                                        {% for dss in d.symptoms %}
-                                                                <div class="row mt-repeater-row">
-                                                                    <div class="col-md-8">
-                                                                        <label class="control-label">Symptom</label>
-                                                                        <input type="text" placeholder="Symptom name" name="sym" {% if dss is defined %} value="{{ dss.symptom.name }}"{% endif %} class="form-control" /> </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="control-label">Weight</label>
-                                                                        <input type="number" name="weight" min="0" max="1" step="0.05" placeholder="input weight" class="form-control" {% if dss is defined -%} value="{{ dss.weight }}"{% endif -%} /> </div>
-                                                                    <div class="col-md-1">
-                                                                        <a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">
-                                                                            <i class="fa fa-close"></i>
-                                                                        </a>
+                                            <div class="portlet-body form">
+                                                <form role="form" class="form-horizontal" action="{{url_for('update_explanation', explanation_id=e.id)}}" method="post">
+                                                    <div class="form-body">
+                                                        <h4>Basic Information</h4>
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-2 control-label" for="explanation">Explanation name<span class="required">*</span></label>
+                                                            <div class="col-md-8">
+                                                                <input class="form-control" type="text" placeholder="Please give explanation name" {% if e is defined %} value="{{ e.name }}"{% endif %} id="explanation" name="explanation" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group form-md-radio">
+                                                            <label class="col-md-2 control-label" for="type">Explanation type<span class="required">*</span></label>
+                                                            <div class="col-md-8">
+                                                                <div class="md-radio-inline">
+                                                                    {% for t in et %}
+                                                                    <div class="md-radio">
+                                                                        <input type="radio" id="type{{t.id}}" name="type" value="{{t.id}}" class="md-radiobtn" {% if t.id == e.typeid %} checked="checked" {% endif %}>
+                                                                        <label for="type{{t.id}}">
+                                                                        <span></span>
+                                                                        <span class="check"></span>
+                                                                        <span class="box"></span> {{t.name}} </label>
                                                                     </div>
-                                                                </div>
-                                                                {% endfor %}
-                                                    <div class="form-group mt-repeater">
-                                                        <div data-repeater-list="dsw">
-                                                            <div data-repeater-item class="mt-repeater-item">
-                                                                <div class="row mt-repeater-row">
-                                                                    <div class="col-md-8">
-                                                                        <label class="control-label">Symptom</label>
-                                                                        <input type="text" placeholder="Symptom name" name="newsym"  class="form-control" /> </div>
-                                                                    <div class="col-md-3">
-                                                                        <label class="control-label">Weight</label>
-                                                                        <input type="number" name="newweight" min="0" max="1" step="0.05" placeholder="input weight" class="form-control"  /> </div>
-                                                                    <div class="col-md-1">
-                                                                        <a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">
-                                                                            <i class="fa fa-close"></i>
-                                                                        </a>
-                                                                    </div>
+                                                                    {% endfor %}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <a href="javascript:;" data-repeater-create class="btn btn-info mt-repeater-add">
-                                                            <i class="fa fa-plus"></i> Add Symptoms</a>
-                                                    </div>
+
+                                                        <div class="form-group form-md-checkboxes">
+                                                            <label class="col-md-2 control-label" for="location">Locations</label>
+                                                            <div class="col-md-10">
+                                                                <div class="md-checkbox-inline">
+                                                                    {% for l in el %}
+                                                                    <div class="md-checkbox">
+                                                                        <input type="checkbox" name="location" value="{{l.id}}" id="l{{l.id}}" class="md-check" {% for checkid in e.locations %}{% if l.id == checkid.location_id %} checked {% endif %}{% endfor %}>
+                                                                        <label for="l{{l.id}}">
+                                                                            <span></span>
+                                                                            <span class="check"></span>
+                                                                            <span class="box"></span> {{l.name}} </label>
+                                                                    </div>
+                                                                    {% endfor %}
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <h4>Observations</h4>
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-2 control-label" for="obs">Observation name</label>
+                                                            <div class="col-md-4">
+                                                            {% for eos in e.observations %}
+                                                            <input type="text" class="form-control" name="obs" id="ob{{eos.id}}" placeholder="Enter observation name" {% if eos is defined %} value="{{ eos.observation.name }}"{% endif %}>
+                                                            {% endfor %}
+                                                            <span class="help-block">Enter observation name...</span>
+                                                            </div>
+                                                            <label class="col-md-2 control-label" for="weight">Observation weight</label>
+                                                            <div class="col-md-2">
+                                                            {% for eos in e.observations %}
+                                                            <input type="number" min="0" max="1" step="0.01" class="form-control" name="weight" id="wt{{eos.id}}" placeholder="Enter weight" {% if eos is defined %} value="{{ eos.weight }}"{% endif %}>
+                                                            {% endfor %}
+                                                            <span class="help-block">Adjust weight...</span>
+                                                            </div>
+                                                        </div>
+
+
+                                                    <!--<div class="form-group form-md-line-input mt-repeater">-->
+                                                        <!--&lt;!&ndash;<div data-repeater-list="dsw">&ndash;&gt;-->
+                                                        <!--<div class="row mt-repeater-row">-->
+                                                                    <!--<div class="col-md-8">-->
+                                                                        <!--<label class="control-label">Observation</label></div>-->
+                                                                    <!--<div class="col-md-3">-->
+                                                                        <!--<label class="control-label">Weight</label></div>-->
+                                                        <!--</div>-->
+                                                        <!--{% for eos in e.observations %}-->
+                                                                <!--<div class="row mt-repeater-row">-->
+                                                                    <!--<div class="col-md-8">-->
+                                                                        <!--<input type="text" placeholder="Observation name" name="obs" {% if eos is defined %} value="{{ eos.observation.name }}"{% endif %} class="form-control" /> </div>-->
+                                                                    <!--<div class="col-md-3">-->
+                                                                        <!--<input type="number" name="weight" min="0" max="1" step="0.01" placeholder="input weight" class="form-control" {% if eos is defined -%} value="{{ eos.weight }}"{% endif -%} /> </div>-->
+                                                                    <!--<div class="col-md-1">-->
+                                                                        <!--<a href="javascript:;" data-repeater-delete class="btn btn-danger">-->
+                                                                            <!--<i class="fa fa-close"></i>-->
+                                                                        <!--</a>-->
+                                                                    <!--</div>-->
+                                                            <!--</div>-->
+                                                        <!--{% endfor %}-->
+                                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                                            <!--<a href="javascript:;" data-repeater-create class="btn btn-info mt-repeater-add">-->
+                                                            <!--<i class="fa fa-plus"></i> Add more observation</a>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="form-group form-md-line-input mt-repeater">-->
+                                                        <!--<div data-repeater-list="dsw">-->
+                                                            <!--<div data-repeater-item class="mt-repeater-item">-->
+                                                                <!--<div class="row mt-repeater-row">-->
+                                                                    <!--<div class="col-md-8">-->
+                                                                        <!--<label class="control-label">Observation</label>-->
+                                                                        <!--<input type="text" placeholder="Observation name" name="newobs"  class="form-control" /> </div>-->
+                                                                    <!--<div class="col-md-3">-->
+                                                                        <!--<label class="control-label">Weight</label>-->
+                                                                        <!--<input type="number" name="newweight" min="0" max="1" step="0.05" placeholder="input weight" class="form-control"/> </div>-->
+                                                                    <!--<div class="col-md-1">-->
+                                                                        <!--<a href="javascript:;" data-repeater-delete class="btn btn-danger mt-repeater-delete">-->
+                                                                            <!--<i class="fa fa-close"></i>-->
+                                                                        <!--</a>-->
+                                                                    <!--</div>-->
+                                                                <!--</div>-->
+                                                            <!--</div>-->
+                                                        <!--</div>-->
+                                                        <!--<a href="javascript:;" data-repeater-create class="btn btn-info mt-repeater-add">-->
+                                                            <!--<i class="fa fa-plus"></i> Add more observation</a>-->
+                                                    <!--</div>-->
                                                     <div class="margin-top-10">
-                                                        <button type="submit" class="btn green">{% if d %}Save{% else %}Create disease{% endif %}</button>
+                                                        <button type="submit" class="btn green">{% if e %}Save{% else %}Create explanation{% endif %}</button>
+                                                    </div>
                                                     </div>
                                                 </form>
                                             </div>
@@ -219,14 +288,15 @@
         <!-- END CORE PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <script src="/static/global/plugins/jquery-repeater/jquery.repeater.js" type="text/javascript"></script>
-        <script src="/static/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="/static/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="/static/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
         <script src="/static/global/scripts/app.min.js" type="text/javascript"></script>
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
         <script src="/static/pages/scripts/form-repeater.min.js" type="text/javascript"></script>
-        <script src="/static/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+        <script src="/static/pages/scripts/form-validation-md.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="/static/layouts/layout5/scripts/layout.min.js" type="text/javascript"></script>
