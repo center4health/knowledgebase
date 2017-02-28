@@ -15,7 +15,7 @@ def unauthorized():
     return redirect(url_for('login'))
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         return render_template('login.html')
@@ -68,6 +68,29 @@ def all():
         'diseases.html',
         all=explanation.query.all()
     )
+
+
+@app.route('/', methods=["GET"])
+@login_required
+def index():
+    return render_template(
+        'index.html',
+        a=explanation.query.count(),
+        b=observation.query.count(),
+        c=User.query.count(),
+        d=location.query.count()
+    )
+
+@app.route('/s', methods=['GET', 'POST'])
+@login_required
+def search_explanation():
+    e = explanation.query.filter_by(name=request.form['query']).first()
+    if e is None:
+        return redirect('/')
+    else:
+        url = 'u'+str(e.id)
+        return redirect(url)
+
 
 # @app.route('/new-disease', methods=['GET', 'POST'])
 # def new_disease():
