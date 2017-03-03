@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash, url_for, session
+from flask import render_template, request, redirect, flash, url_for, session, jsonify
 from models import explanation, observation, location, explanation_observation, explanation_type, explanation_location, User, db
 from application import app, bcrypt, login_manager
 from flask_login import login_user , logout_user , current_user , login_required
@@ -28,7 +28,7 @@ def login():
                 db.session.commit()
                 login_user(user, remember=False)
                 flash('Logged in successfully')
-                return redirect(request.args.get('next') or url_for('all'))
+                return redirect(request.args.get('next') or url_for('index'))
             else:
                 flash('Password is invalid', 'error')
                 return redirect(url_for('login'))
@@ -84,12 +84,14 @@ def index():
 @app.route('/s', methods=['GET', 'POST'])
 @login_required
 def search_explanation():
-    e = explanation.query.filter_by(name=request.form['query']).first()
+    e = explanation.query.filter(explanation.name.like('%' + str(request.form['query']) + '%')).all()
     if e is None:
         return redirect('/')
     else:
-        url = 'u'+str(e.id)
-        return redirect(url)
+        return render_template(
+            'diseases.html',
+            all=e
+        )
 
 
 # @app.route('/new-disease', methods=['GET', 'POST'])
@@ -145,7 +147,7 @@ def update_explanation(explanation_id):
                 db.session.delete(dds)
                 db.session.commit()
                 s = observation.query.filter_by(name=exobservations[i]).first()
-                if (s == None):
+                if s is None:
                     s = observation(name=request.form['observation'])
                     db.session.add(s)
                     db.session.commit()
@@ -183,20 +185,43 @@ def delete_explanation(explanation_id):
         return redirect('/all')
 
 
+@app.route('/autocomplete', methods=['GET'])
+def autocomplete():
+    search = request.args.get('q')
+    query = explanation.query.filter(explanation.name.like('%' + str(search) + '%'))
+    results = [ex[1] for ex in query.all()]
+    return jsonify(matching_results=results)
 
-# @app.route('/add-symptom', methods=['GET', 'POST'])
-# def new():
-#     if request.method == 'POST':
-#         d = disease.query.filter_by(id=request.form['disease']).first()
-#         s = symptom.query.filter_by(id=request.form['symptom']).first()
-#         ds = disease_symptom(disease_id=request.form['disease'], symptom_id=request.form['symptom'], weight=request.form['weight'])
-#         db.session.add(ds)
-#         db.session.commit()
-#         return redirect('/')
-#     else:
-#         return render_template(
-#             'add-symptom.html',
-#             page='add-symptom',
-#             d=disease.query.all(),
-#             s=symptom.query.all()
-#         )
+@app.route('/new', methods=['GET', 'POST'])
+def new_explanation():
+    et = explanation_type.query.all()
+    el = location.query.all()
+    ob = observation.query.all()
+    if request.method == 'POST':
+        e = explanation(name=request.form['explanation'], typeid=request.form['typeid'])
+        db.session.add(e)
+        db.session.commit()
+        e = explanation.query.filter_by(name=request.form['explanation']).first()
+        for i in request.form.getlist('location'):
+            nel = explanation_location(explanation_id=e.id, location_id=i)
+            db.session.add(nel)
+        db.session.commit()
+        l = len(request.form) - len(request.form.getlist('location')) - 2
+        print (l)
+        for i in range(0, l):
+            s = 'os['+str(i)+'][observation]'
+            w = 'os['+str(i)+'][wt]'
+            oid = int(request.form[s])
+            wt = float(request.form[w])
+            neo = explanation_observation(explanation_id=e.id, observation_id=oid, weight=wt)
+            db.session.add(neo)
+        db.session.commit()
+        return redirect('/all')
+    else:
+        return render_template(
+            'new.html',
+            et=et,
+            el=el,
+            ob=ob,
+            e = None
+        )

@@ -73,7 +73,7 @@
                         <div class="nav-collapse collapse navbar-collapse navbar-responsive-collapse">
                             <ul class="nav navbar-nav">
                                 <li class="dropdown dropdown-fw dropdown-fw-disabled  active open selected">
-                                    <a href="javascript:;" class="text-uppercase">
+                                    <a href="{{url_for('index')}}" class="text-uppercase">
                                         <i class="icon-home"></i> Home </a>
                                 </li>
                                 <li class="dropdown dropdown-fw dropdown-fw-disabled">
@@ -84,7 +84,7 @@
                                             <a href="{{url_for('all')}}"> All Explanation </a>
                                         </li>
                                         <li>
-                                            <a href="{{url_for('all')}}"> New Explanation </a>
+                                            <a href="{{url_for('new_explanation')}}"> New Explanation </a>
                                         </li>
                                         <li>
                                             <a href="{{url_for('all')}}"> Manage Explanation </a>
