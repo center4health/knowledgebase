@@ -66,7 +66,7 @@ def logout():
 @login_required
 def all():
     return render_template(
-        'diseases.html',
+        'all.html',
         all=explanation.query.all()
     )
 
@@ -90,7 +90,7 @@ def search_explanation():
         return redirect('/')
     else:
         return render_template(
-            'diseases.html',
+            'all.html',
             all=e
         )
 
@@ -135,6 +135,8 @@ def update_explanation(explanation_id):
             else:
                 db.session.delete(eo)
         for i in range(len(exobservations)):
+            if exobservations[i] == "" or exweight[i] == "":
+                continue
             s = observation.query.filter_by(name=exobservations[i]).first()
             if s is None:
                 s = observation(name=request.form['observation'])
@@ -144,6 +146,7 @@ def update_explanation(explanation_id):
             ds = explanation_observation(explanation_id=e.id, observation_id=s.id, weight=exweight[i])
             db.session.add(ds)
         db.session.commit()
+        print(len(request.form))
         return redirect('/all')
 
 @app.route('/d<int:explanation_id>', methods=['GET'])
@@ -198,8 +201,10 @@ def new_explanation():
             nel = explanation_location(explanation_id=e.id, location_id=i)
             db.session.add(nel)
         db.session.commit()
-        l = len(request.form) - len(request.form.getlist('location')) - 3
-        for i in range(0, l):
+        l = len(request.form) - 3
+        l = int(l / 2)
+        for i in range(l):
+            print(i)
             s = 'os['+str(i)+'][observation]'
             w = 'os['+str(i)+'][wt]'
             oid = observation.query.filter_by(name=request.form[s]).first()
@@ -211,7 +216,7 @@ def new_explanation():
             wt = float(request.form[w])
             neo = explanation_observation(explanation_id=e.id, observation_id=o.id, weight=wt)
             db.session.add(neo)
-        db.session.commit()
+            db.session.commit()
         return redirect('/all')
     else:
         return render_template(
@@ -219,5 +224,5 @@ def new_explanation():
             et=et,
             el=el,
             ob=ob,
-            e = None
+            e=None
         )

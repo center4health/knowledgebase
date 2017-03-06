@@ -57,7 +57,7 @@
                             <!-- End Toggle Button -->
                             <!-- BEGIN LOGO -->
                             <a id="index" class="page-logo" href="index.html">
-                                Doknosis </a>
+                                <h2>Doknosis</h2> </a>
                             <!-- END LOGO -->
                             <!-- BEGIN SEARCH -->
                             <form class="search" action="extra_search.html" method="GET">
@@ -72,7 +72,7 @@
                         <div class="nav-collapse collapse navbar-collapse navbar-responsive-collapse">
                             <ul class="nav navbar-nav">
                                 <li class="dropdown dropdown-fw dropdown-fw-disabled  ">
-                                    <a href="javascript:;" class="text-uppercase">
+                                    <a href="{{url_for('index')}}" class="text-uppercase">
                                         <i class="icon-home"></i> Home </a>
                                 </li>
                                 <li class="dropdown dropdown-fw dropdown-fw-disabled  active open selected">
@@ -84,9 +84,6 @@
                                         </li>
                                         <li>
                                             <a href="{{url_for('new_explanation')}}"> New Explanation </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{url_for('all')}}"> Manage Explanation </a>
                                         </li>
                                     </ul>
                                 </li>
