@@ -1,3 +1,4 @@
+import json
 from flask import render_template, request, redirect, flash, url_for, session, jsonify
 from models import explanation, observation, location, explanation_observation, explanation_type, explanation_location, User, db
 from application import app, bcrypt, login_manager
@@ -84,7 +85,7 @@ def index():
 @app.route('/s', methods=['GET', 'POST'])
 @login_required
 def search_explanation():
-    e = explanation.query.filter(explanation.name.like('%' + str(request.form['query']) + '%')).all()
+    e = explanation.query.filter(explanation.name.ilike('%' + str(request.form['exs']) + '%')).all()
     if e is None:
         return redirect('/')
     else:
@@ -92,20 +93,6 @@ def search_explanation():
             'diseases.html',
             all=e
         )
-
-
-# @app.route('/new-disease', methods=['GET', 'POST'])
-# def new_disease():
-#     if request.method == 'POST':
-#         d = disease(name=request.form['disease'])
-#         db.session.add(d)
-#         db.session.commit()
-#         return redirect('/')
-#     else:
-#         return render_template(
-#             'new-disease.html',
-#             page='new-disease.html')
-#
 
 
 @app.route('/u<int:explanation_id>', methods=['GET', 'POST'])
@@ -141,23 +128,21 @@ def update_explanation(explanation_id):
             db.session.commit()
         exobservations = request.form.getlist('obs')
         exweight = request.form.getlist('weight')
-        for i in range(len(exobservations)):
-            if exobservations[i] != e.observations[i].observation.name:
-                dds = explanation_observation.query.filter_by(explanation_id=e.id, observation_id =e.observations[i].observation.id).first()
-                db.session.delete(dds)
-                db.session.commit()
-                s = observation.query.filter_by(name=exobservations[i]).first()
-                if s is None:
-                    s = observation(name=request.form['observation'])
-                    db.session.add(s)
-                    db.session.commit()
-                s = observation.query.filter_by(name=exobservations[i]).first()
-                ds = explanation_observation(explanation_id=e.id, observation_id=s.id, weight=exweight[i])
-                db.session.add(ds)
+        for o in e.observations:
+            eo = explanation_observation.query.filter_by(explanation_id=e.id, observation_id=o.observation.id).first()
+            if eo is None:
+                break
             else:
-                s = observation.query.filter_by(name=exobservations[i]).first()
-                ds = explanation_observation.query.filter_by(explanation_id=e.id, observation_id=s.id).first()
-                ds.weight = exweight[i]
+                db.session.delete(eo)
+        for i in range(len(exobservations)):
+            s = observation.query.filter_by(name=exobservations[i]).first()
+            if s is None:
+                s = observation(name=request.form['observation'])
+                db.session.add(s)
+                db.session.commit()
+            s = observation.query.filter_by(name=exobservations[i]).first()
+            ds = explanation_observation(explanation_id=e.id, observation_id=s.id, weight=exweight[i])
+            db.session.add(ds)
         db.session.commit()
         return redirect('/all')
 
@@ -185,12 +170,19 @@ def delete_explanation(explanation_id):
         return redirect('/all')
 
 
-@app.route('/autocomplete', methods=['GET'])
-def autocomplete():
-    search = request.args.get('q')
-    query = explanation.query.filter(explanation.name.like('%' + str(search) + '%'))
-    results = [ex[1] for ex in query.all()]
-    return jsonify(matching_results=results)
+@app.route('/exname.json', methods=['GET'])
+def exautocomplete():
+    exs = explanation.query.all()
+    results = [ex.name for ex in exs]
+    return jsonify(results)
+
+
+@app.route('/obname.json', methods=['GET'])
+def obautocomplete():
+    obs = observation.query.all()
+    results = [ob.name for ob in obs]
+    return jsonify(results)
+
 
 @app.route('/new', methods=['GET', 'POST'])
 def new_explanation():
@@ -206,14 +198,18 @@ def new_explanation():
             nel = explanation_location(explanation_id=e.id, location_id=i)
             db.session.add(nel)
         db.session.commit()
-        l = len(request.form) - len(request.form.getlist('location')) - 2
-        print (l)
+        l = len(request.form) - len(request.form.getlist('location')) - 3
         for i in range(0, l):
             s = 'os['+str(i)+'][observation]'
             w = 'os['+str(i)+'][wt]'
-            oid = int(request.form[s])
+            oid = observation.query.filter_by(name=request.form[s]).first()
+            if oid is None:
+                o = observation(name=request.form[s])
+                db.session.add(o)
+                db.session.commit()
+            o = observation.query.filter_by(name=request.form[s]).first()
             wt = float(request.form[w])
-            neo = explanation_observation(explanation_id=e.id, observation_id=oid, weight=wt)
+            neo = explanation_observation(explanation_id=e.id, observation_id=o.id, weight=wt)
             db.session.add(neo)
         db.session.commit()
         return redirect('/all')
