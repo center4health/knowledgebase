@@ -74,12 +74,14 @@ def all():
 @app.route('/', methods=["GET"])
 @login_required
 def index():
+    te = explanation.query.count()
+    drug = explanation.query.filter_by(typeid=3).count()
     return render_template(
         'index.html',
-        a=explanation.query.count(),
-        b=observation.query.count(),
-        c=User.query.count(),
-        d=location.query.count()
+        a=te-drug,
+        b=drug,
+        c=observation.query.count(),
+        d=User.query.count()
     )
 
 @app.route('/s', methods=['GET', 'POST'])
