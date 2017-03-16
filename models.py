@@ -29,6 +29,10 @@ class explanation_type(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.Text)
 
+class observation_type(db.Model):
+    __tablename__ = "observation_type"
+    id = db.Column('id', db.Integer, primary_key=True)
+    name = db.Column('name', db.Text)
 
 class explanation(db.Model):
     __tablename__ = "explanation"
@@ -45,7 +49,8 @@ class observation(db.Model):
     __tablename__ = "observation"
     id = db.Column('id', db.Integer, primary_key=True)
     name = db.Column('name', db.Text)
-    typeid = db.Column('type', db.Integer)
+    typeid = db.Column('type', db.Integer, db.ForeignKey('observation_type.id'))
+    types = db.relationship("observation_type")
     explanations = db.relationship("explanation_observation", back_populates="observation")
 
 

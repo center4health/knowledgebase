@@ -1,6 +1,6 @@
 import json
 from flask import render_template, request, redirect, flash, url_for, session, jsonify
-from models import explanation, observation, location, explanation_observation, explanation_type, explanation_location, User, db
+from models import explanation, observation, location, explanation_observation, explanation_type, observation_type, explanation_location, User, db
 from application import app, bcrypt, login_manager
 from flask_login import login_user , logout_user , current_user , login_required
 login_manager.login_view = 'login'
@@ -70,6 +70,13 @@ def all():
         all=explanation.query.all()
     )
 
+@app.route('/allob', methods=["GET"])
+@login_required
+def allob():
+    return render_template(
+        'allob.html',
+        all=observation.query.all()
+    )
 
 @app.route('/', methods=["GET"])
 @login_required
@@ -84,6 +91,7 @@ def index():
         d=User.query.count()
     )
 
+
 @app.route('/s', methods=['GET', 'POST'])
 @login_required
 def search_explanation():
@@ -93,6 +101,19 @@ def search_explanation():
     else:
         return render_template(
             'all.html',
+            all=e
+        )
+
+
+@app.route('/so', methods=['GET', 'POST'])
+@login_required
+def search_observation():
+    e = observation.query.filter(observation.name.ilike('%' + str(request.form['obs']) + '%')).all()
+    if e is None:
+        return redirect('/')
+    else:
+        return render_template(
+            'allob.html',
             all=e
         )
 
@@ -209,6 +230,8 @@ def new_explanation():
             print(i)
             s = 'os['+str(i)+'][observation]'
             w = 'os['+str(i)+'][wt]'
+            if request.form[s] == "" or request.form[w] == "":
+                continue
             oid = observation.query.filter_by(name=request.form[s]).first()
             if oid is None:
                 o = observation(name=request.form[s])
@@ -228,3 +251,35 @@ def new_explanation():
             ob=ob,
             e=None
         )
+
+
+@app.route('/newob', methods=['GET', 'POST'])
+def new_observation():
+    et = observation_type.query.all()
+    if request.method == 'POST':
+        ob = observation(name=request.form['observation'], typeid=request.form['typeid'])
+        db.session.add(ob)
+        db.session.commit()
+        return redirect(url_for('allob'))
+    else:
+        return render_template('newob.html', et = et)
+
+
+@app.route('/obdetail', methods=['GET', 'POST'])
+def observation_detail():
+    return
+
+@app.route('/uo<int:observation_id>', methods=['GET', 'POST'])
+@login_required
+def update_observation(observation_id):
+    e = observation.query.get(observation_id)
+    et = observation_type.query.all()
+    if request.method == 'GET':
+        return render_template('updateob.html', et = et, e = e)
+    else:
+        e.name = request.form['observation']
+        e.typeid = request.form['type']
+        db.session.commit()
+        return redirect(url_for('allob'))
+
+

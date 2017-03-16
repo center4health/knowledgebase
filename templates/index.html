@@ -79,6 +79,18 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="dropdown dropdown-fw dropdown-fw-disabled">
+                                    <a href="javascript:;" class="text-uppercase">
+                                        <i class="icon-briefcase"></i> Observation </a>
+                                    <ul class="dropdown-menu dropdown-menu-fw">
+                                        <li>
+                                            <a href="{{url_for('allob')}}"> All Observation </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{url_for('new_observation')}}"> New Observation </a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                         <!-- END HEADER MENU -->
@@ -159,12 +171,14 @@
                     </div>
                                 <br>
                                 <br>
-                                <div class="form-row-seperated">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-row-seperated">
                                     <div class="portlet light bordered">
                                         <div class="portlet-title">
                                                 <div class="caption">
                                                     <i class="icon-speech font-green"></i>
-                                                    <span class="caption-subject bold font-green uppercase">Quick Search</span>
+                                                    <span class="caption-subject bold font-green uppercase">Explanation Search</span>
                                                 </div>
                                                 <div class="actions">
                                                     <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;"> </a>
@@ -174,13 +188,13 @@
                                                 <form role="form" class="form-horizontal" action="{{ url_for('search_explanation') }}" id="s" method="post">
                                                     <div class="form-body">
                                                         <div class="form-group form-md-line-input">
-                                                            <label class="col-md-2 control-label" for="explanation">Explanation name<span class="required">*</span></label>
-                                                            <div class="col-md-8">
+                                                            <label class="col-md-3 control-label" for="explanation">Explanation name<span class="required">*</span></label>
+                                                            <div class="col-md-6">
                                                                 <input class="form-control exa" type="text" placeholder="Please give explanation name" id="exs" name="exs" />
                                                             </div>
                                                         </div>
                                                         <div class="margin-top-20">
-                                                            <label class="col-md-2 control-label"></label>
+                                                            <label class="col-md-3 control-label"></label>
                                                             <a href="javascript:;" onclick="document.getElementById('s').submit();">
                                                                 <button type="submit" class="btn green">Search</button>
                                                             </a>
@@ -196,6 +210,49 @@
                                                     </div>
                                                 </form>
                                             </div>
+                                    </div>
+                                </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-row-seperated">
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="icon-speech font-green"></i>
+                                                    <span class="caption-subject bold font-green uppercase">Observation Search</span>
+                                                </div>
+                                                <div class="actions">
+                                                    <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="javascript:;"> </a>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body form">
+                                                <form role="form" class="form-horizontal" action="{{ url_for('search_observation') }}" id="so" method="post">
+                                                    <div class="form-body">
+                                                        <div class="form-group form-md-line-input">
+                                                            <label class="col-md-3 control-label" for="observation">Observation name<span class="required">*</span></label>
+                                                            <div class="col-md-6">
+                                                                <input class="form-control oba" type="text" placeholder="Please give observation name" id="obs" name="obs" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="margin-top-20">
+                                                            <label class="col-md-3 control-label"></label>
+                                                            <a href="javascript:;" onclick="document.getElementById('so').submit();">
+                                                                <button type="submit" class="btn green">Search</button>
+                                                            </a>
+                                                        </div>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                    </div>
+                                </div>
                                     </div>
                                 </div>
                                 <!-- END PAGE BASE CONTENT -->

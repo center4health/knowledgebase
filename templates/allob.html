@@ -69,7 +69,7 @@
                                     <a href="{{url_for('index')}}" class="text-uppercase">
                                         <i class="icon-home"></i> Home </a>
                                 </li>
-                                <li class="dropdown dropdown-fw dropdown-fw-disabled  active open selected">
+                                <li class="dropdown dropdown-fw dropdown-fw-disabled">
                                     <a href="javascript:;" class="text-uppercase">
                                         <i class="icon-briefcase"></i> Explanation </a>
                                     <ul class="dropdown-menu dropdown-menu-fw">
@@ -81,7 +81,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="dropdown dropdown-fw dropdown-fw-disabled">
+                                <li class="dropdown dropdown-fw dropdown-fw-disabled  active open selected">
                                     <a href="javascript:;" class="text-uppercase">
                                         <i class="icon-briefcase"></i> Observation </a>
                                     <ul class="dropdown-menu dropdown-menu-fw">
@@ -110,7 +110,7 @@
                             <li>
                                 <a href="#">Home</a>
                             </li>
-                            <li class="active">Explanation</li>
+                            <li class="active">Observation</li>
                         </ol>
 
                     </div>
@@ -126,7 +126,7 @@
                                         <div class="portlet-title">
                                             <div class="caption font-green">
                                                 <i class="icon-settings font-green"></i>
-                                                <span class="caption-subject bold uppercase">Explanation</span>
+                                                <span class="caption-subject bold uppercase">Observation</span>
                                             </div>
                                             <div class="tools"> </div>
                                         </div>
@@ -136,8 +136,7 @@
                                                         <tr>
                                                             <th class="none">Detail</th>
                                                             <th class="all">ID</th>
-                                                            <th class="none">ICD10</th>
-                                                            <th class="all">Explanation name</th>
+                                                            <th class="all">Observation name</th>
                                                             <th class="all">Type</th>
                                                             <th class="all">Action</th>
                                                         </tr>
@@ -147,9 +146,8 @@
                                                         <tr>
                                                             <td></td>
                                                             <td> {{ d.id }} </td>
-                                                            <td> {{ d.icd10 }} </td>
                                                             <td> {{ d.name }}</td>
-                                                            <td>{{ d.types.name }}</td>
+                                                            <td> {{ d.types.name }}</td>
                                                             <td>
                                                                 <div class="btn-group pull-right">
                                                                     <button class="btn green btn-xs btn-outline dropdown-toggle" data-toggle="dropdown">Tools
@@ -157,12 +155,12 @@
                                                                     </button>
                                                                     <ul class="dropdown-menu pull-right">
                                                                         <li>
-                                                                            <a href="{{ url_for('update_explanation', explanation_id=d.id) }}">
+                                                                            <a href="{{ url_for('update_observation', observation_id=d.id) }}">
                                                                                 <i class="fa fa-pencil-square-o" ></i> Edit </a>
                                                                         </li>
                                                                         <li>
-                                                                            <a href="{{ url_for('delete_explanation', explanation_id=d.id) }}">
-                                                                                <i class="fa fa-trash"></i> Delete </a>
+                                                                            <a href="{{ url_for('observation_detail', observation_id=d.id) }}">
+                                                                                <i class="fa fa-trash"></i> Detail </a>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
