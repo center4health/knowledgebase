@@ -18,9 +18,11 @@ def unauthorized():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print 'hello listeners'
     if request.method == 'GET':
         return render_template('login.html')
-    if len(request.form) == 2:
+    print request.form
+    if len(request.form) > 1 and len(request.form)<6:
         user = User.query.filter_by(username=request.form['username']).first()
         if user:
             if bcrypt.check_password_hash(user.password, request.form['password']):
@@ -47,7 +49,7 @@ def login():
         db.session.add(user)
         db.session.commit()
         flash('User successfully registered')
-        return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
 @app.route('/logout', methods=["GET"])
