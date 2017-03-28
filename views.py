@@ -18,10 +18,8 @@ def unauthorized():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print 'hello listeners'
     if request.method == 'GET':
         return render_template('login.html')
-    print request.form
     if len(request.form) > 1 and len(request.form)<6:
         user = User.query.filter_by(username=request.form['username']).first()
         if user:
