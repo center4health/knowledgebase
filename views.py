@@ -70,7 +70,6 @@ def login():
                 db.session.add(user)
                 db.session.commit()
                 login_user(user, remember=False)
-                println("password correct")
                 flash('Logged in successfully')
                 return redirect(request.args.get('next') or url_for('index'))
             else:
