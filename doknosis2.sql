@@ -38446,13 +38446,8 @@ COPY observation_type (id, name) FROM stdin;
 --
 
 COPY users (id, username, password, email, name, authenticated) FROM stdin;
-1	wangpin	$2b$12$lYpwmByTSbuM4KfEBHgvBOc4rb9ax0fjQU11y8k8.NyjW0x3KeMza	wangpinde@gmail.com	Pin Wang	t
-5	seonepark	\\x243262243132245a77724e2e524645485932434a73394e4b424e4f504f662f71575547395a484151622e7a476b4758346a734e54796e733070464d6d	seonepark0405@gmail.com	Se One Park	f
-6	simone	\\x2432622431322450564558774c785945484a7044525733473852356b65373839334b4b6e6945462e384a714a59704d5a593158344266756469774871	simone.celia@alum.mit.edu	Simone Celia Klein	f
-2	test	$2b$12$S0gtpbs8hATO10dehsLsEu2dZXBcb4WpuAs8Hga/tPHoiVTNN8LDW	test@ucsd.edu	test	t
-3	lamueller	$2b$12$/YWN9fgwYFnc3r.RgYpO/OAz985PBdvHAICtb.8VaNkAiqFcyFuny	lamueller@ucsd.edu	Lars	t
-7	Easpencer 	\\x243262243132242e38445773653879643371536d56764d463644306b4f56307547583635665233514e6c414569754144616d384b647432656f764e65	easpencer@gmail.com	Eliah aronoff spencer	f
-8	max	\\x24326224313224366556327643377a765657506b6b654973414b564f2e7258557a4a786b703751785561786342335632616a475577656e4551546f65	m@musterwork.com	Max Mustermann	f
+1	test	$2b$12$S0gtpbs8hATO10dehsLsEu2dZXBcb4WpuAs8Hga/tPHoiVTNN8LDW	test@ucsd.edu	test	t
+2	lamueller	$2b$12$/YWN9fgwYFnc3r.RgYpO/OAz985PBdvHAICtb.8VaNkAiqFcyFuny	lamueller@ucsd.edu	Lars	t
 \.
 
 
