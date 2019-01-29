@@ -26,7 +26,7 @@ psycopg2==2.7
 pycparser==2.17
 pyparsing==2.1.10
 python-dateutil==2.6.0
-PyYAML==3.12
+PyYAML==4.2b1
 requests==2.20.0
 semantic-version==2.5.0
 six==1.10.0
