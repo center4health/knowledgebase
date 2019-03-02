@@ -81,7 +81,7 @@ def login():
     if len(request.form) == 6:
         username = request.form['username']
         if request.form['password'] == request.form['rpassword']:
-            password = bcrypt.generate_password_hash(request.form['password'])
+            password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
         else:
             flash('Password is invalid', 'error')
             return redirect(url_for('login'))
